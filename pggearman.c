@@ -95,6 +95,10 @@ void _PG_init(void)
 #if defined(PG_VERSION_NUM) && (80400 <= PG_VERSION_NUM)
                                    GUC_LIST_INPUT,
 #endif
+
+#if defined(PG_VERSION_NUM) && (90100 <= PG_VERSION_NUM)
+                                   NULL, // GucStringCheckHook parameter for postgres 9.1+ <<== here additional parameter
+#endif
                                    (GucStringAssignHook) assign_gearman_servers_guc,
                                    (GucShowHook) show_gearman_servers_guc);
     }
@@ -134,7 +138,13 @@ static gearman_return_t do_servers_add(char *host_str)
 
     old_ctx = MemoryContextSwitchTo(globals.pg_ctx);
     gearman_client_remove_servers(globals.client);
+#if defined(PG_VERSION_NUM) && (90100 <= PG_VERSION_NUM)
+    // for version 9.1+ u cannot call gearman_client_add_servers if host is null
+    if(host_str) ret = gearman_client_add_servers(globals.client, host_str);
+    else ret = GEARMAN_SUCCESS; // ret success anyway, but dont call
+#else
     ret = gearman_client_add_servers(globals.client, host_str);
+#endif
     MemoryContextSwitchTo(old_ctx);
 
     if (ret != GEARMAN_SUCCESS)
