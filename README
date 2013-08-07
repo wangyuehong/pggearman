@@ -1,0 +1,56 @@
+This package contains a set of Gearman functions for PostgreSQL. This
+is a client interface which allows you to run submit Gearman jobs
+from within PostgreSQL.
+
+For more information about Gearman, see: http://gearman.org/
+
+You will need PostgreSQL and the Gearman C server and Library package
+which can be found at:
+
+https://launchpad.net/gearmand
+
+Once the Gearman package is installed, you can install the UDFs with:
+
+make
+make install
+
+To load the UDFs for a database, run:
+
+shell$ psql <database>
+[database]=# \i /usr/local/postgresql/share/contrib/pggearman.sql
+
+You should then have the following functions available:
+
+gman_servers_set('localhost');
+
+This function sets the Gearman job server to use. The
+argument can be a list with optional port numbers, such as:
+"192.168.1.3:4730,192.168.1.4:7003"
+
+
+gman_do('reverse', 'Hello World!');
+gman_do_high('reverse', 'Hello World!');
+gman_do_low('reverse', 'Hello World!');
+
+Each of these functions submit a foreground job to the job server
+configured with gman_servers_set. These functions will block until the
+job was run and the result is returned. The variants submit normal,
+high, and low priority jobs.
+
+
+gman_do_background('reverse', 'Hello World!');
+gman_do_high_background('reverse', 'Hello World!');
+gman_do_low_background('reverse', 'Hello World!');
+
+Each of these functions submit a background job to the job server
+configured with gman_servers_set. These functions will return as
+soon as the job has been queued and return the job handle ID from
+the job server.
+
+POSTGRESQL CONFIGURATION
+
+This module supports GUC (Grand Unified Configuration) variables.
+
+Example of what we support in the Postgres configuration file: 
+custom_variable_classes = 'pggearman'
+pggearman.default_servers = 'localhost'

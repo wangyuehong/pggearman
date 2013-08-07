@@ -1,0 +1,32 @@
+-- Gearman PostgreSQL Functions
+-- Copyright (C) 2009 Eric Day, Selena Deckelmann
+--
+-- Use and distribution licensed under the BSD license.  See
+-- the COPYING file in the parent directory for full text.
+
+-- Adjust this setting to control where the objects get created.
+SET search_path = public;
+
+-- $1 = server hostname - TEXT
+CREATE OR REPLACE FUNCTION gman_servers_set(TEXT) RETURNS BOOL
+AS 'MODULE_PATHNAME', 'gman_servers_set' LANGUAGE 'C' STRICT;
+
+-- $1 = function - TEXT
+-- $2 = workload - TEXT
+CREATE OR REPLACE FUNCTION gman_do(TEXT, TEXT) RETURNS TEXT
+AS 'MODULE_PATHNAME', 'gman_do' LANGUAGE 'C';
+
+CREATE OR REPLACE FUNCTION gman_do_high(TEXT, TEXT) RETURNS TEXT
+AS 'MODULE_PATHNAME', 'gman_do_high' LANGUAGE 'C';
+
+CREATE OR REPLACE FUNCTION gman_do_low(TEXT, TEXT) RETURNS TEXT
+AS 'MODULE_PATHNAME', 'gman_do_low' LANGUAGE 'C';
+
+CREATE OR REPLACE FUNCTION gman_do_background(TEXT, TEXT) RETURNS TEXT
+AS 'MODULE_PATHNAME', 'gman_do_background' LANGUAGE 'C';
+
+CREATE OR REPLACE FUNCTION gman_do_high_background(TEXT, TEXT) RETURNS TEXT
+AS 'MODULE_PATHNAME', 'gman_do_high_background' LANGUAGE 'C';
+
+CREATE OR REPLACE FUNCTION gman_do_low_background(TEXT, TEXT) RETURNS TEXT
+AS 'MODULE_PATHNAME', 'gman_do_low_background' LANGUAGE 'C';
