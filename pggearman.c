@@ -62,6 +62,10 @@ static GucStringAssignHook *assign_gearman_servers_guc(const char *newval,
 static GucShowHook *show_gearman_servers_guc(void);
 static gearman_return_t do_servers_add(char *host_str);
 
+#if PG_VERSION_NUM >= 90600
+/* GetConfigOptionByName has a new signature from 9.6 on */
+#define GetConfigOptionByName(name, varname) GetConfigOptionByName(name, varname, false)
+#endif  /* PG_VERSION_NUM */
 
 void _PG_init(void)
 {
