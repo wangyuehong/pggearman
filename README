@@ -52,5 +52,5 @@ POSTGRESQL CONFIGURATION
 This module supports GUC (Grand Unified Configuration) variables.
 
 Example of what we support in the Postgres configuration file: 
-custom_variable_classes = 'pggearman'
+#custom_variable_classes = 'pggearman'  (9.2+)
 pggearman.default_servers = 'localhost'
